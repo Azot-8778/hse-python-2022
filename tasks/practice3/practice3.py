@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Dict, Any, List, Optional
-
+import re
+import csv
 
 def count_words(text: str) -> Dict[str, int]:
     """
@@ -28,8 +29,26 @@ def count_words(text: str) -> Dict[str, int]:
 
     # пиши свой код здесь
 
-    return {}
-
+    # word_dict = {}
+    # text = re.sub('[.,-:?!]', ' ', text)
+    # text = text.split()
+    # for word in text:
+    #     if all([char.isalpha() for char in word]) and word != '':
+    #         low_word = word.lower()
+    #         if low_word in word_dict:
+    #             word_dict[low_word] += 1
+    #         else:
+    #             word_dict[low_word] = 1
+    # return word_dict
+    result = {}
+    text = ''.join(filter(lambda x: x.isalnum() or x == ' ', text))
+    for candidate in text.split(' '):
+        if all([char.isalpha() for char in candidate]) and candidate != '':
+            if candidate.lower() in result:
+                result[candidate.lower()] += 1
+            else:
+                result[candidate.lower()] = 1
+    return result
 
 def exp_list(numbers: List[int], exp: int) -> List[int]:
     """
@@ -42,7 +61,8 @@ def exp_list(numbers: List[int], exp: int) -> List[int]:
 
     # пиши свой код здесь
 
-    return []
+    result = [i ** exp for i in numbers]
+    return result
 
 
 def get_cashback(operations: List[Dict[str, Any]], special_category: List[str]) -> float:
@@ -107,4 +127,13 @@ def csv_reader(header: str) -> int:
 
     # пиши свой код здесь
 
-    return 0
+    uniq_words = set()
+    with open(get_path_to_file()) as f:
+        reader = csv.reader(f)
+        headers = next(reader)
+        index = headers.index(header)
+        for line in reader:
+            uniq_words.add(line[index])
+    result = len(uniq_words)
+
+    return result
